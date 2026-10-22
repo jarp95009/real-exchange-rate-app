@@ -32,10 +32,10 @@ def fetch_imf_data(iso3, indicator):
     Fetches time series data from the IMF SDMX 3.0 API.
     Handles standard SDMX JSON response structure.
     """
-    if indicator == 'CPI':
-        key = f"M.{iso3}.CPI._T.IX"
+if indicator == 'CPI':
+        key = f"{iso3}.CPI._T.IX.M"
     elif indicator == 'EXR':
-        key = f"M.{iso3}.XDC_USD.PA_RT"
+        key = f"{iso3}.XDC_USD.PA_RT.M"
     else:
         return pd.Series(dtype=float)
 
