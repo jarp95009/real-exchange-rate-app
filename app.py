@@ -23,8 +23,6 @@ COUNTRY_CODES = {
     "South Korea": "KOR"
 }
 
-BASE_URL = "https://api.imf.org/external/sdmx/3.0/data/IFS/"
-
 # --- Data Fetching Logic ---
 @st.cache_data(ttl=86400)
 def fetch_imf_data(iso3, indicator):
@@ -33,13 +31,16 @@ def fetch_imf_data(iso3, indicator):
     Handles standard SDMX JSON response structure.
     """
     if indicator == 'CPI':
+        dataflow = "CPI"
         key = f"{iso3}.CPI._T.IX.M"
     elif indicator == 'EXR':
+        dataflow = "EXR"
         key = f"{iso3}.XDC_USD.PA_RT.M"
     else:
         return pd.Series(dtype=float)
 
-    url = f"{BASE_URL}{key}?startPeriod=1976-01"
+    # The URL now dynamically selects CPI or EXR dataflows instead of IFS
+    url = f"https://api.imf.org/external/sdmx/3.0/data/{dataflow}/{key}?startPeriod=1976-01"
     headers = {'Accept': 'application/vnd.sdmx.data+json;version=1.0.0-wd'}
     
     try:
