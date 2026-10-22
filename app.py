@@ -34,7 +34,7 @@ def fetch_imf_data(iso3, indicator):
     """
 if indicator == 'CPI':
         key = f"{iso3}.CPI._T.IX.M"
-    elif indicator == 'EXR':
+elif indicator == 'EXR':
         key = f"{iso3}.XDC_USD.PA_RT.M"
     else:
         return pd.Series(dtype=float)
