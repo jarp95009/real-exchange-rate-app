@@ -32,15 +32,13 @@ def fetch_imf_data(iso3, indicator):
     Fetches time series data from the IMF SDMX 3.0 API.
     Handles standard SDMX JSON response structure.
     """
-if indicator == 'CPI':
+    if indicator == 'CPI':
         key = f"{iso3}.CPI._T.IX.M"
-elif indicator == 'EXR':
+    elif indicator == 'EXR':
         key = f"{iso3}.XDC_USD.PA_RT.M"
     else:
         return pd.Series(dtype=float)
 
-    # Note: Depending on exact IMF endpoint configurations, the URL structure 
-    # might require adjusting the flow (e.g., IFS) or the dimension order.
     url = f"{BASE_URL}{key}?startPeriod=1976-01"
     headers = {'Accept': 'application/vnd.sdmx.data+json;version=1.0.0-wd'}
     
@@ -50,7 +48,6 @@ elif indicator == 'EXR':
         data = response.json()
         
         # Traverse the standard SDMX JSON response to extract periods and values
-        # The exact path may vary based on the specific SDMX 3.0 implementation of the IMF
         series_data = data.get('data', {}).get('dataSets', [])[0].get('series', {})
         
         if not series_data:
@@ -96,7 +93,6 @@ if c1_iso == c2_iso:
 
 with st.spinner("Fetching data from IMF API..."):
     # Fetch CPI and Exchange Rates
-    # USD Exchange rate is naturally 1 for the US, handle programmatically if API returns empty for USA EXR
     c1_cpi = fetch_imf_data(c1_iso, 'CPI')
     c2_cpi = fetch_imf_data(c2_iso, 'CPI')
     
@@ -115,8 +111,6 @@ df = pd.DataFrame({
 df.index = pd.to_datetime(df.index)
 
 # Calculate Nominal Exchange Rate S(t) = C2/C1
-# IMF EXR is local currency per USD. 
-# So, (C2/USD) / (C1/USD) = C2/C1
 df['S_t'] = df['C2_EXR'] / df['C1_EXR']
 
 # Calculate RER(t) = S(t) * (P1(t) / P2(t))
