@@ -31,16 +31,14 @@ def fetch_imf_data(iso3, indicator):
     Handles standard SDMX JSON response structure.
     """
     if indicator == 'CPI':
-        dataflow = "CPI"
         key = f"{iso3}.CPI._T.IX.M"
     elif indicator == 'EXR':
-        dataflow = "EXR"
         key = f"{iso3}.XDC_USD.PA_RT.M"
     else:
         return pd.Series(dtype=float)
 
-    # The URL now dynamically selects CPI or EXR dataflows instead of IFS
-    url = f"https://api.imf.org/external/sdmx/3.0/data/{dataflow}/{key}?startPeriod=1976-01"
+    # Hardcode IFS back into the URL, keeping the correctly formatted keys
+    url = f"https://api.imf.org/external/sdmx/3.0/data/IFS/{key}?startPeriod=1976-01"
     headers = {'Accept': 'application/vnd.sdmx.data+json;version=1.0.0-wd'}
     
     try:
